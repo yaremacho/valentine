@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Be My Valentine 💖</title>
+
+  <!-- Thicker, rounded font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      overflow: hidden;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 20px;
+      color: rgba(255, 77, 109, 0.8);
+      animation: floatUp linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-110vh);
+        opacity: 0;
+      }
+    }
+
+    .card {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 520px;
+      max-width: 95%;
+      background: white;
+      padding: 60px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      z-index: 5;
+      height: fit-content;
+    }
+
+    h1 {
+      color: #ff4d6d;
+      margin-bottom: 15px;
+      font-size: 38px;
+      font-weight: 800;
+    }
+
+    p {
+      font-size: 22px;
+      margin-bottom: 40px;
+      font-weight: 600;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    button {
+      padding: 20px 40px;
+      font-size: 22px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 700;
+      transition: 0.15s ease;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+      z-index: 6;
+    }
+
+    #noBtn {
+      background: #999;
+      color: white;
+      position: relative;
+      z-index: 6;
+    }
+
+    #message {
+      margin-top: 30px;
+      font-size: 24px;
+      color: #ff4d6d;
+      display: none;
+      font-weight: 700;
+    }
+
+    .confetti {
+      position: fixed;
+      width: 8px;
+      height: 12px;
+      background: red;
+      top: -20px;
+      animation: confettiFall linear forwards;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    @keyframes confettiFall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hey Sandra 💕</h1>
+    <p>Will you be my Valentine?</p>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No 🙃</button>
+    </div>
+
+    <div id="message">
+      YAAAAAAAAY GOING ON A DATE WITH SANDRAAAA ILYYYY🥰  
+      ❤️
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const message = document.getElementById("message");
+
+    let escaped = false;
+
+    function moveNoButton() {
+      if (!escaped) {
+        escaped = true;
+        noBtn.style.position = "fixed";
+      }
+
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      let x, y, tries = 0;
+      const yesRect = yesBtn.getBoundingClientRect();
+
+      do {
+        x = Math.random() * maxX;
+        y = Math.random() * maxY;
+
+        const noRect = {
+          left: x,
+          right: x + noBtn.offsetWidth,
+          top: y,
+          bottom: y + noBtn.offsetHeight
+        };
+
+        var overlap = !(
+          noRect.right < yesRect.left ||
+          noRect.left > yesRect.right ||
+          noRect.bottom < yesRect.top ||
+          noRect.top > yesRect.bottom
+        );
+
+        tries++;
+      } while (overlap && tries < 50);
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", moveNoButton);
+
+    yesBtn.addEventListener("click", () => {
+      message.style.display = "block";
+      yesBtn.style.display = "none";
+      noBtn.style.display = "none";
+      launchConfetti();
+    });
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerText = "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+      heart.style.fontSize = 14 + Math.random() * 20 + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
+    }
+
+    setInterval(createHeart, 300);
+
+    function launchConfetti() {
+      for (let i = 0; i < 120; i++) {
+        const conf = document.createElement("div");
+        conf.classList.add("confetti");
+        conf.style.left = Math.random() * 100 + "vw";
+        conf.style.backgroundColor =
+          ["#ff4d6d", "#ffd166", "#06d6a0", "#118ab2"][Math.floor(Math.random() * 4)];
+        conf.style.animationDuration = 2 + Math.random() * 2 + "s";
+        document.body.appendChild(conf);
+        setTimeout(() => conf.remove(), 4000);
+      }
+    }
+  </script>
+</body>
+</html>
